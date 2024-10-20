@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Fetch and Process</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #dataContainer {
+            margin-top: 20px;
+        }
+
+        .data-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Processed Data from External API</h1>
+<button id="loadDataBtn">Load Data</button>
+<div id="dataContainer"></div>
+
+<script>
+    async function fetchAndProcessData() {
+        try {
+            const response = await fetch('/api/external-data');
+            const data = await response.json();
+
+            // 외부 API 데이터 가공 (예: 필터링, 정렬 등)
+            const processedData = data.map(item => ({
+                id: item.id,
+                name: item.name.toUpperCase() // 예시로 이름을 대문자로 변경
+            }));
+
+            // 화면에 데이터 표시
+            renderData(processedData);
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    function renderData(data) {
+        const dataContainer = document.getElementById('dataContainer');
+        dataContainer.innerHTML = ''; // 기존 콘텐츠를 지움
+
+        data.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'data-item';
+            itemElement.innerHTML = `ID: ${item.id}, Name: ${item.name}`;
+            dataContainer.appendChild(itemElement);
+        });
+    }
+
+    document.getElementById('loadDataBtn').addEventListener('click', fetchAndProcessData);
+</script>
+</body>
+</html>
